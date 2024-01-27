@@ -2,7 +2,7 @@ const daysModel = require('../models/daysModel');
 
 const getDays = async (req, res) => {
     try {
-        const days = await daysModel.getDays();
+        const days = await daysModel.getDays(req.params);
         return res.status(200).json(days);
     } catch (error) {
         return res.status(500).json({ message: "Desculpe, houve um erro no servidor", error: error });
