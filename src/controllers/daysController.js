@@ -9,6 +9,15 @@ const getDays = async (req, res) => {
     }
 };
 
+const getDaysNotPay = async (req, res) => {
+    try {
+        const days = await daysModel.getDaysNotPay();
+        return res.status(200).json(days);
+    } catch (error) {
+        return res.status(500).json({ message: "Desculpe, houve um erro no servidor", error: error });
+    }
+};
+
 const createAtendiment = async (req, res) => {
     try {
         await daysModel.createAtendiment(req.body);
@@ -30,6 +39,7 @@ const deleteAtendiment = async (req, res) => {
 
 module.exports = {
     getDays,
+    getDaysNotPay,
     createAtendiment,
     deleteAtendiment,
 };

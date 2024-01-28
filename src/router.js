@@ -8,6 +8,7 @@ const pagouController = require('./controllers/pagouController');
 
 router.get('/procedures', proceduresController.getProcedures);
 router.get('/days/:date', daysController.getDays);
+router.get('/daysnotpay', daysController.getDaysNotPay);
 router.get('/pagamentos', paymentsController.getPayments);
 
 router.post('/days', daysController.createAtendiment);

@@ -17,6 +17,41 @@ const getDays = async (date) => {
     return arrayDays
 };
 
+const getDaysNotPay = async () => {
+    const [rows] = await connection.execute('SELECT * FROM dailys WHERE pago = ?', [false]);
+
+    let arrayDays = rows.map(row => ({ ...row }));
+    let daysNotpay = null;
+
+    try {
+        daysNotpay = arrayDays.reduce((accumulator, registro) => {
+            const date = new Date(registro.dateRegister).toLocaleDateString();
+            const key = `${date}_${registro.pago}`;
+
+            if (!accumulator[key]) {
+                accumulator[key] = {
+                    ids: [registro.idRegister],
+                    date: date,
+                    total: parseFloat(registro.price.toFixed(2)),
+                    status: registro.pago === '1' ? 'Pago' : 'Não Pago',
+                };
+            } else {
+                if (!accumulator[key].ids) {
+                    accumulator[key].ids = [];
+                }
+                const precoArredondado = parseFloat(registro.price.toFixed(2));
+                accumulator[key].total += precoArredondado;
+                accumulator[key].ids.push(registro.idRegister);
+            }
+            return accumulator;
+        }, {});
+
+        daysNotpay = Object.values(daysNotpay).map(obj => ({ ...obj }));
+        return daysNotpay;
+    } catch (error) {
+    }
+};
+
 const createAtendiment = async ({ name, idProcedure, price }) => {
     try {
         const date = new Date();
@@ -38,6 +73,7 @@ const deleteAtendiment = async (id) => {
 
 module.exports = {
     getDays,
+    getDaysNotPay,
     createAtendiment,
     deleteAtendiment,
 }
