@@ -1,7 +1,7 @@
-const connection = require('./connection')
-
+const pool = require('./connection'); 
 const getProcedures = async () => {
-    const [procedures] = await connection.execute('SELECT * FROM procedures');
+    const query = 'SELECT * FROM procedures';
+    const { rows: procedures } = await pool.query(query);
     return procedures;
 };
 

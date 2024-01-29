@@ -1,8 +1,13 @@
-const connection = require('./connection');
+const  pool  = require('./connection');
 
 const getPayments = async () => {
-    const [pagamentos] = await connection.execute('SELECT * FROM pagamentos');
-    return pagamentos;
+    try {
+        const result = await pool.query('SELECT * FROM pagamentos');
+        return result.rows;
+    } catch (error) {
+        console.error('Erro ao obter pagamentos:', error.message);
+        throw error;
+    }
 };
 
 module.exports = {

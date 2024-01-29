@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const postgres = require('postgres');
 const router = require('./router');
 
 const corsOptions = {
@@ -12,5 +13,7 @@ const app = express();
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(router);
+
+require('dotenv').config();
 
 module.exports = app;

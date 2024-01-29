@@ -1,20 +1,24 @@
-const connection = require('./connection');
+const pool = require('./connection'); 
 
 const updateAtendiment = async (id, total) => {
     const arrayDeIds = id.split(',').map(item => item.trim()).filter(item => item !== '');
-    try {
-        const [payment] = await connection.execute('INSERT INTO pagamentos (datePagamento, valorPagamento) VALUES(?, ?)',[new Date(), total]);
-        const idPagamento = payment.insertId;
 
-        for(let i = 0; i < arrayDeIds.length; i++) {
-            const [update] = await connection.execute('UPDATE dailys SET pago = true, idPagamento = ? WHERE idRegister = ?', [idPagamento, arrayDeIds[i]]);
+    try {
+        const paymentQuery = 'INSERT INTO pagamentos ("date_pagamento", "valor_pagamento") VALUES($1, $2) RETURNING "id_pagamento"';
+        const paymentResult = await pool.query(paymentQuery, [new Date(), total]);
+
+        const idPagamento = paymentResult.rows[0].idPagamento;
+
+        for (let i = 0; i < arrayDeIds.length; i++) {
+            const updateQuery = 'UPDATE dailys SET "pago" = true, "id_pagamento" = $1 WHERE "id_register" = $2';
+            const updateResult = await pool.query(updateQuery, [idPagamento, arrayDeIds[i]]);
         }
     } catch (error) {
         console.error("Erro ao criar pagamento:", error.message);
         throw error;
     }
-}
+};
 
 module.exports = {
     updateAtendiment,
-}
+};

@@ -1,26 +1,33 @@
-const connection = require('./connection');
+const pool = require('./connection'); 
 
 const getDays = async (date) => {
-    const [procedures] = await connection.execute('SELECT * FROM procedures');
-    const [rows] = await connection.execute('SELECT * FROM dailys WHERE dateRegister = ?', [date.date]);
+    const proceduresQuery = 'SELECT * FROM procedures';
+    const dailysQuery = 'SELECT * FROM dailys WHERE "date_register" = $1';
+    
+    const proceduresResult = await pool.query(proceduresQuery);
+    const dailysResult = await pool.query(dailysQuery, [date.date]);
 
+    const procedures = proceduresResult.rows;
+    const rows = dailysResult.rows;
 
     let arrayDays = rows.map(row => ({ ...row }));
     arrayDays.forEach(novoId => {
         procedures.forEach(item => {
-            if(item.idProcedure === novoId.idProcedure) {
+            if (item.idProcedure === novoId.idProcedure) {
                 novoId.nameProcedure = item.nameProcedure;
                 novoId.typeProcedure = item.typeProcedure;
-            } 
-        })
-    })
-    return arrayDays
+            }
+        });
+    });
+
+    return arrayDays;
 };
 
 const getDaysNotPay = async () => {
-    const [rows] = await connection.execute('SELECT * FROM dailys WHERE pago = ?', [false]);
+    const query = 'SELECT * FROM dailys WHERE pago = $1';
+    const result = await pool.query(query, [false]);
 
-    let arrayDays = rows.map(row => ({ ...row }));
+    let arrayDays = result.rows;
     let daysNotpay = null;
 
     try {
@@ -49,6 +56,8 @@ const getDaysNotPay = async () => {
         daysNotpay = Object.values(daysNotpay).map(obj => ({ ...obj }));
         return daysNotpay;
     } catch (error) {
+        console.error("Erro ao obter dias não pagos:", error.message);
+        throw error;
     }
 };
 
@@ -56,10 +65,10 @@ const createAtendiment = async ({ name, idProcedure, price }) => {
     try {
         const date = new Date();
         const values = [name, idProcedure, date, false, null, price];
-        const sql = `INSERT INTO dailys (nameClient, idProcedure, dateRegister, pago, idPagamento, price) VALUES (?, ?, ?, ?, ?, ?)`;
+        const sql = `INSERT INTO dailys ("name_client", "id_procedure", "date_register", "pago", "id_pagamento", "price") VALUES ($1, $2, $3, $4, $5, $6)`;
 
-        const [newAtendiment] = await connection.execute(sql, values);
-        return newAtendiment;
+        const result = await pool.query(sql, values);
+        return result.rows[0];
     } catch (error) {
         console.error("Erro ao criar atendimento:", error.message);
         throw error;
@@ -67,13 +76,14 @@ const createAtendiment = async ({ name, idProcedure, price }) => {
 };
 
 const deleteAtendiment = async (id) => {
-    const [removeAtendiment] = await connection.execute('DELETE FROM dailys WHERE idRegister = ?', [id])
-    return  removeAtendiment;
-}
+    const query = 'DELETE FROM dailys WHERE "id_register" = $1';
+    const result = await pool.query(query, [id]);
+    return result.rows[0];
+};
 
 module.exports = {
     getDays,
     getDaysNotPay,
     createAtendiment,
     deleteAtendiment,
-}
+};
