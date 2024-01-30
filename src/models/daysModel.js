@@ -32,12 +32,12 @@ const getDaysNotPay = async () => {
 
     try {
         daysNotpay = arrayDays.reduce((accumulator, registro) => {
-            const date = new Date(registro.dateRegister).toLocaleDateString();
+            const date = new Date(registro.date_register).toLocaleDateString();
             const key = `${date}_${registro.pago}`;
 
             if (!accumulator[key]) {
                 accumulator[key] = {
-                    ids: [registro.idRegister],
+                    ids: [registro.id_register],
                     date: date,
                     total: parseFloat(registro.price.toFixed(2)),
                     status: registro.pago === '1' ? 'Pago' : 'Não Pago',
@@ -48,7 +48,7 @@ const getDaysNotPay = async () => {
                 }
                 const precoArredondado = parseFloat(registro.price.toFixed(2));
                 accumulator[key].total += precoArredondado;
-                accumulator[key].ids.push(registro.idRegister);
+                accumulator[key].ids.push(registro.id_register);
             }
             return accumulator;
         }, {});
