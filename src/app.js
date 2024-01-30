@@ -10,6 +10,9 @@ const corsOptions = {
 
 const app = express();
 
+const { Pool } = require('pg');
+require('dotenv').config();
+
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(router);
