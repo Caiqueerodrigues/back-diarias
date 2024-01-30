@@ -13,9 +13,9 @@ const getDays = async (date) => {
     let arrayDays = rows.map(row => ({ ...row }));
     arrayDays.forEach(novoId => {
         procedures.forEach(item => {
-            if (item.idProcedure === novoId.idProcedure) {
-                novoId.nameProcedure = item.nameProcedure;
-                novoId.typeProcedure = item.typeProcedure;
+            if (item.id_procedure === novoId.id_procedure) {
+                novoId.name_procedure = item.name_procedure;
+                novoId.type_procedure = item.type_procedure;
             }
         });
     });

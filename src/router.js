@@ -7,7 +7,7 @@ const paymentsController = require('./controllers/paymentsController');
 const pagouController = require('./controllers/pagouController');
 
 router.get('/', (req, res) => {
-    res.status(200).send("Hello World")
+    res.status(200).send("Hello World");
 })
 
 router.get('/procedures', proceduresController.getProcedures);
