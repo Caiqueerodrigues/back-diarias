@@ -6,10 +6,6 @@ const daysController = require('./controllers/daysController');
 const paymentsController = require('./controllers/paymentsController');
 const pagouController = require('./controllers/pagouController');
 
-router.get('/', (req, res) => {
-    res.status(200).send("Hello World");
-})
-
 router.get('/procedures', proceduresController.getProcedures);
 router.get('/days/:date', daysController.getDays);
 router.get('/daysnotpay', daysController.getDaysNotPay);
