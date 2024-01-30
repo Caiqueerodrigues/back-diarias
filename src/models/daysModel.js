@@ -61,10 +61,10 @@ const getDaysNotPay = async () => {
     }
 };
 
-const createAtendiment = async ({ name, idProcedure, price }) => {
+const createAtendiment = async ({ name, id_procedure, price }) => {
     try {
         const date = new Date();
-        const values = [name, idProcedure, date, false, null, price];
+        const values = [name, id_procedure, date, false, null, price];
         const sql = `INSERT INTO dailys ("name_client", "id_procedure", "date_register", "pago", "id_pagamento", "price") VALUES ($1, $2, $3, $4, $5, $6)`;
 
         const result = await pool.query(sql, values);
