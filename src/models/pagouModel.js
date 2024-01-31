@@ -7,7 +7,7 @@ const updateAtendiment = async (id, total) => {
     try {
         let date = new Date().toLocaleDateString();
         let partesData = date.split('/');
-        date = `${partesData[2]}-${partesData[1]}-${partesData[0]}`;
+        date = `${partesData[2].padStart(2, '0')}-${partesData[1].padStart(2, '0')}-${partesData[0].padStart(2, '0')}`;
 
         const paymentQuery = 'INSERT INTO pagamentos ("date_pagamento", "valor_pagamento") VALUES($1, $2) RETURNING "id_pagamento"';
         const paymentResult = await pool.query(paymentQuery, [date, total]);
