@@ -4,23 +4,27 @@ const getDays = async (date) => {
     const proceduresQuery = 'SELECT * FROM procedures';
     const dailysQuery = 'SELECT * FROM dailys WHERE "date_register" = $1';
     
-    const proceduresResult = await pool.query(proceduresQuery);
-    const dailysResult = await pool.query(dailysQuery, [date.date]);
+    try {
+        const proceduresResult = await pool.query(proceduresQuery);
+        const dailysResult = await pool.query(dailysQuery, [date.date]);
 
-    const procedures = proceduresResult.rows;
-    const rows = dailysResult.rows;
+        const procedures = proceduresResult.rows;
+        const rows = dailysResult.rows;
 
-    let arrayDays = rows.map(row => ({ ...row }));
-    arrayDays.forEach(novoId => {
-        procedures.forEach(item => {
-            if (item.id_procedure === novoId.id_procedure) {
-                novoId.name_procedure = item.name_procedure;
-                novoId.type_procedure = item.type_procedure;
-            }
+        let arrayDays = rows.map(row => ({ ...row }));
+        arrayDays.forEach(novoId => {
+            procedures.forEach(item => {
+                if (item.id_procedure === novoId.id_procedure) {
+                    novoId.name_procedure = item.name_procedure;
+                    novoId.type_procedure = item.type_procedure;
+                }
+            });
         });
-    });
-
-    return arrayDays;
+        return arrayDays;
+    } catch (error) {
+        console.error("Erro ao obter dias não pagos:", error.message);
+        throw error;
+    }
 };
 
 const getDaysNotPay = async () => {
