@@ -3,7 +3,7 @@ const pool = require('./connection');
 const getDays = async (date) => {
     const proceduresQuery = 'SELECT * FROM procedures';
     const dailysQuery = 'SELECT * FROM dailys WHERE "date_register" = $1';
-    
+
     try {
         const proceduresResult = await pool.query(proceduresQuery);
         const dailysResult = await pool.query(dailysQuery, [date.date]);
@@ -65,9 +65,12 @@ const getDaysNotPay = async () => {
     }
 };
 
-const createAtendiment = async ({ name, id_procedure, price, date }) => {
+const createAtendiment = async ({ name, id_procedure, price }) => {
+    const date = new Date();
+    const dataFormatada = date.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+
     try {
-        const values = [name, id_procedure, date, false, null, price];
+        const values = [name, id_procedure, dataFormatada, false, null, price];
         const sql = `INSERT INTO dailys ("name_client", "id_procedure", "date_register", "pago", "id_pagamento", "price") VALUES ($1, $2, $3, $4, $5, $6)`;
 
         const result = await pool.query(sql, values);
