@@ -4,10 +4,14 @@ const updateAtendiment = async (id, total) => {
     const arrayDeIds = id.split(',').map(item => item.trim()).filter(item => item !== '');
 
     try {
-        const paymentQuery = 'INSERT INTO pagamentos ("date_pagamento", "valor_pagamento") VALUES($1, $2) RETURNING "id_pagamento"';
-        const paymentResult = await pool.query(paymentQuery, [new Date(), total]);
+        let date = new Date().toLocaleDateString();
+        let partesData = date.split('/');
+        date = `${partesData[2]}-${partesData[1]}-${partesData[0]}`;
 
-        const idPagamento = paymentResult.rows[0].idPagamento;
+        const paymentQuery = 'INSERT INTO pagamentos ("date_pagamento", "valor_pagamento") VALUES($1, $2) RETURNING "id_pagamento"';
+        const paymentResult = await pool.query(paymentQuery, [date, total]);
+
+        const idPagamento = paymentResult.rows[0].id_pagamento;
 
         for (let i = 0; i < arrayDeIds.length; i++) {
             const updateQuery = 'UPDATE dailys SET "pago" = true, "id_pagamento" = $1 WHERE "id_register" = $2';
