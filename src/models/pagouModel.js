@@ -12,6 +12,7 @@ const updateAtendiment = async (id, total) => {
         const paymentResult = await pool.query(paymentQuery, [date, total]);
 
         const idPagamento = paymentResult.rows[0].id_pagamento;
+        console.log(idPagamento + "id pagamento", arrayDeIds);
 
         for (let i = 0; i < arrayDeIds.length; i++) {
             const updateQuery = 'UPDATE dailys SET "pago" = true, "id_pagamento" = $1 WHERE "id_register" = $2';

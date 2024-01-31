@@ -58,6 +58,7 @@ const getDaysNotPay = async () => {
         }, {});
 
         daysNotpay = Object.values(daysNotpay).map(obj => ({ ...obj }));
+        console.log(daysNotpay);
         return daysNotpay;
     } catch (error) {
         console.error("Erro ao obter dias não pagos:", error.message);
@@ -68,7 +69,7 @@ const getDaysNotPay = async () => {
 const createAtendiment = async ({ name, id_procedure, price }) => {
     const date = new Date();
     date.setHours(date.getHours() - 3);
-    
+
     try {
 
         const values = [name, id_procedure, date, false, null, price];
