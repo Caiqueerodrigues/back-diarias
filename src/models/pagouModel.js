@@ -3,6 +3,7 @@ const pool = require('./connection');
 const updateAtendiment = async (id, total) => {
     const arrayDeIds = id.split(',').map(item => item.trim()).filter(item => item !== '');
 
+    console.log( arrayDeIds, total + "TOTAL");
     try {
         let date = new Date().toLocaleDateString();
         let partesData = date.split('/');
@@ -12,7 +13,6 @@ const updateAtendiment = async (id, total) => {
         const paymentResult = await pool.query(paymentQuery, [date, total]);
 
         const idPagamento = paymentResult.rows[0].id_pagamento;
-        console.log(idPagamento + "id pagamento", arrayDeIds);
 
         for (let i = 0; i < arrayDeIds.length; i++) {
             const updateQuery = 'UPDATE dailys SET "pago" = true, "id_pagamento" = $1 WHERE "id_register" = $2';
