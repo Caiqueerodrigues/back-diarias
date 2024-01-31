@@ -65,7 +65,7 @@ const getDaysNotPay = async () => {
     }
 };
 
-const createAtendiment = async ({ name, id_procedure, price }) => {
+const createAtendiment = async ({ nsame, id_procedure, price }) => {
     const date = new Date();
     const dataFormatada = date.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
 
